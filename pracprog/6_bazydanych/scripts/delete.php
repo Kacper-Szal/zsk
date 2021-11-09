@@ -9,7 +9,8 @@
     $del= "DELETE FROM `users` WHERE `users`.`id` = $_GET[id]";
     $connect->query($del);
     if ($connect->affected_rows) {
-      header("location: ../3_bazy_tabela_delete.php?deleteUser=$id");
+      // header("location: ../3_bazy_tabela_delete.php?deleteUser=$id");
+      header("location: ../4_bazy_tabela_delete_insert.php?deleteUser=$id");
     } else {
       echo "nie usunięto rekordu";
     }
