@@ -44,7 +44,7 @@ ROW;
       }
       echo "</table><br>";
       if (isset($_GET['error'])) {
-        echo "<br>$_GET[error]";
+        echo "<br>$_GET[error]<br>";
       }
       if (isset($_GET['addUser'])) {
         echo <<< FORMADDUSER
