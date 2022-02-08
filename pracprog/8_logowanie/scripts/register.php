@@ -1,7 +1,7 @@
 <?php
-//wypełnoine pola
-// sesja z errorem
-session_start();
+  // sesja z errorem
+  session_start();
+  //sprawdzanie formularza
   foreach ($_POST as $key => $value) {
     if (empty($value)) {
       $_SESSION['error'] = "Wypełnij wszystkie pola np. ".$key;
@@ -19,11 +19,22 @@ session_start();
     echo "<script>history.back();</script>";
     exit();
   }
+  //szyfrowanie hasla
+  $pass = password_hash($_POST['pass1'], PASSWORD_ARGON2ID);
 
-  $date = date('Y-m-d H:i:s');
-  $connect = new mysqli("localhost","root","","rejestracja");
-  $stmt = $connect->prepare("INSERT INTO `users` (`name`, `surname`, `email`, `password`, `birthday`, `created_at`) VALUES (?, ?, ?, ?, ?, ?);");
-  $stmt->bind_param("ssssss", $_POST['name'], $_POST['surname'], $_POST['email1'], $_POST['pass1'], $_POST['birthday'], $date);
+  require_once './connect.php';
+  //prepared statement
+  $stmt = $connect->prepare("INSERT INTO `users` (`name`, `surname`, `email`, `password`, `birthday`) VALUES (?, ?, ?, ?, ?);");
+  $stmt->bind_param("sssss", $_POST['name'], $_POST['surname'], $_POST['email1'], $pass, $_POST['birthday']);
   $stmt->execute();
-  echo "ok";
+
+  //sprawdzanie czy dodano do bazy
+  if (mysqli_affected_rows($connect)==1) {
+    $_SESSION['error'] = 'pomyślnie zarejestrowano użytkownika o adresie email: '.$_POST['email1'];
+  }else {
+    $_SESSION['error'] = 'nie zarejestrowano użytkownika';
+  }
+
+  //powrót do index.php
+  header("location: ./../index.php");
  ?>
